@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<script src="js/vue.js" type="text/javascript" charset="utf-8"></script>
+		<link rel="stylesheet" type="text/css" href="css/todolist.css"/>
+		<style type="text/css">
+			.delete
+			{
+				text-decoration: line-through;
+			}
+			.btnselcolor
+			{
+				color: white;
+				background-color: blue;
+				width: 100px;
+			}
+			.btnunselcolor
+			{
+				color: white;
+				background-color: deepskyblue;
+				width: 100px;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="app">
+			<header>
+				<h1>今天的任务</h1>
+				<button type="button" :class="active===0?'btnselcolor':'btnunselcolor'" @click="changeactive(0)">全部</button>
+				<button type="button" :class="active===1?'btnselcolor':'btnunselcolor'" @click="changeactive(1)">已完成</button>
+				<button type="button" :class="active===2?'btnselcolor':'btnunselcolor'" @click="changeactive(2)">未完成</button>
+				
+				<input class="new-todo" type="text" name="" id="" v-model="textvalue" @keyup.enter="add"/>
+			</header>
+			
+			<div id="">
+				<ul class="todo-list">
+					<li class="todo" v-for="(item,index) in todolist2">
+						<div class="view">
+							<span class="index">
+								<input type="checkbox" v-model:checked="item.iscompleted" />
+								{{index+1}}.
+							</span>
+							<label>
+								<span :class="{'delete':item.iscompleted}">{{item.task}}</span>
+								<span id="" style="color: blue;position: absolute;right: 80px;"  v-if="item.iscompleted">已完成</span>
+								<span id="" style="color: red;position: absolute;right: 80px;" v-else>未完成</span>
+								<button  style="position: absolute;right: 10px;" type="button" @click="remove(index)">删除</button>
+							</label>
+						</div>
+					</li>
+				</ul>
+			</div>
+			
+			<footer>
+				<span>{{todolist2.length}}条任务</span>
+				<button class="clear-completed" type="button" @click="clear">清空</button>
+			</footer>
+			
+		</div>
+		
+		<script type="text/javascript">
+			var vm=new Vue({
+				el:"#app",
+				data:{
+					todolist:[
+						{id:1,task:"100行代码",iscompleted:false},
+						{id:2,task:"50个单词",iscompleted:false},
+						{id:3,task:"1000步",iscompleted:true}
+					],
+					todolist2:[
+						{id:1,task:"100行代码",iscompleted:false},
+						{id:2,task:"50个单词",iscompleted:false},
+						{id:3,task:"1000步",iscompleted:true}
+					],
+					active:0,
+					textvalue="好好学习"
+				},
+				methods:{
+					changeactive(i)
+					{
+						this.active=i;	
+						if(i=0){
+							this.todolist2=this.todolist;
+						}
+						else if(i==1)
+						{
+							this.todolist2=this.todolist.filter(item=>item.iscompleted);
+						}
+						else{
+							this.todolist2=this.todolist.filter(item=>!item.iscompleted);
+						}
+					},
+					remove(index)
+					{
+						this.todolist.splice(index,1);
+					},
+					clear()
+					{
+						this.todolist = [];
+					},
+					add()
+					{
+						this.todolist.push({id:this.todolist.length+1,task:this.textvalue,iscompleted:false})
+	
+					}
+				}
+			})
+		</script>
+	</body>
+</html>
